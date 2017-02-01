@@ -2,6 +2,10 @@ function initialize(){
     citiesTable();
     addColumns(cities);
     addEvents();
+    loadJSON();
+    console.log(mydata);
+    debugAjax();
+
 }
 
 // create cities array to hold city names and population
@@ -12,6 +16,8 @@ var cities = [{city: "Portland", population: 632309},
             {city: "Gresham", population: 10553},
             {city: "Hillsboro", population: 102347}
              ];
+//define mydata variable to hold geojson data
+var mydata;
 
 function citiesTable(){
 
@@ -87,6 +93,41 @@ function addEvents(){
 	};
     //if user clicks on the table, run clickme function
 	$('table').on('click', clickme);
+};
+
+
+//function to load geojson data 
+
+function loadJSON(){
+    //query ajax for data using jquery    
+    $.ajax("data/MegaCities.geojson", {
+        datatype: "json", 
+        success: function(response){
+            mydata = response;
+            console.log(mydata);
+        }   
+    });
+};
+
+//the callback function to debug
+function debugCallback(response){
+	//add geojson data to html using stringify to convert to regular text
+	$("#mydiv").append('<br>GeoJSON data:<br>' + JSON.stringify(response));
+};
+
+//ajax function to retrieve geojson data from file
+function debugAjax(){
+    //use ajax to get geojson data from local file
+	$.ajax("data/MegaCities.geojson", {
+		datatype: "json",
+		success: function(response){
+            //assign the response to mydata variable
+			mydata = response;
+            //call the Callback function and pass mydata
+			debugCallback(mydata);
+		}
+	});
+
 };
 
 
